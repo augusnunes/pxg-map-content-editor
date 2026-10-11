@@ -9,7 +9,6 @@ class ConfigurationPXGFile:
         self.PADRAO = re.compile(
             r"position:\s*\n\s*y:\s*(?P<y>-?\d+)\s*\n\s*x:\s*(?P<x>-?\d+)\s*\n\s*z:\s*(?P<z>-?\d+)"
         )
-        # self.BLOCO_MINIMAP = re.compile(r"^Minimap:\n(?:[ \t]+.*\n?)*", re.MULTILINE)
         self.FLAGS = re.compile(r"^  flags:[ \t]*\n(?:[ \t]{4,}.*\n?)*", re.MULTILINE)
         self.config_dict = {
             "minimap": self._get_minimap(),
@@ -56,34 +55,10 @@ class ConfigurationPXGFile:
     def incluir_marcadores(self, novos):
         """novos: lista de dicts com x, y, z e opcionalmente icon, description, color."""
         bloco = self.FLAGS.search(self.text).group(0)
-        # existentes = set(self.config_dict["minimap"])
-        # adicionar = "".join(
-        #     self.gerar_marcador(**n) for n in novos
-        #     if (n['x'], n['y'], n['z']) not in existentes
-        # )
-        # existentes = {
-        #     (m['position']["x"], m['position']["y"], m['position']["z"])
-        #     for m in self.config_dict["minimap"]
-        # }
-        # new_n = []
-        # for n in novos:
-        #     if (n["position"]["x"], n["position"]["y"], n["position"]["z"]) not in existentes:
-        #         new_n.append(n)
-        # print(new_n)
-        # adicionar = "".join(
-        #     self.gerar_marcador(**n) for n in novos 
-        #     if (n["position"]["x"], n["position"]["y"], n["position"]["z"]) not in existentes ## atenção aqui
-        # )
-        # print(novos)
+        
         adicionar = "".join(
             self.gerar_marcador(**n) for n in novos 
         )
-
-
-        # if not adicionar:
-        #     return self.text
-        # se o bloco termina com um "-" vazio solto, insere antes dele
-
         m = re.search(r"    -\n?\Z", bloco)
         if m:
             novo_bloco = bloco[:m.start()] + adicionar + bloco[m.start():]
